@@ -38,7 +38,26 @@ npm start
 # Open http://localhost:3000
 ```
 
+## Priority Fix: Card Placement UX
+
+The current interaction for placing cards is confusing. Players don't know where their card will go.
+
+**Current (bad):**
+- Click on drop zone → card goes to end of line
+- No visual feedback about placement position
+
+**Better approach ideas:**
+1. **Slot-based**: Show empty slots between cards. Click a slot to place your card there.
+2. **Your card visible**: Show your face-down card in a "Your Card" area. Drag it into the line at any position.
+3. **Insert markers**: When dragging, show insertion points between existing cards.
+4. **Preview ghost**: Show a translucent preview of where your card will land.
+
+Recommend option 2: Show player's unplaced card visually, let them drag it into the line. This makes it clear:
+- You have a card to place
+- Where it will go when you drop it
+
 ## Known Issues / To Test
+- [ ] Fix card placement UX (priority)
 - [ ] Test with 2+ browsers to verify real-time sync
 - [ ] Test drag-and-drop card reordering
 - [ ] Test host disconnect (should transfer host role)
