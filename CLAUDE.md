@@ -69,15 +69,10 @@ The current interaction for placing cards is confusing. Players don't know where
 3. **Insert markers**: When dragging, show insertion points between existing cards.
 4. **Preview ghost**: Show a translucent preview of where your card will land.
 
-Recommend option 2: Show player's unplaced card visually, let them drag it into the line. This makes it clear:
-- You have a card to place
-- Where it will go when you drop it
-
-**Also: Current drag-and-drop is flaky.** Issues to investigate:
-- HTML5 drag-and-drop API is notoriously finicky
-- Consider using a library (SortableJS, or simple pointer events)
-- Or implement custom drag with mousedown/mousemove/mouseup
-- Need clear visual feedback: drag ghost, drop targets highlighted, insertion point indicator
+Recommend option 1: Remove drag and drop functionality for a simpler interaction.
+Consider a click-based slot approach. There should be click targets along the line that allows users to
+position their cards anywhere along the line. It should also be keyboard accessible. So perhaps it can use
+radio buttons behind the scenes.
 
 ## Known Issues / To Test
 - [ ] Fix card placement UX (priority)

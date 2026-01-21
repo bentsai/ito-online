@@ -6,7 +6,6 @@ let gameState = null;
 let myId = null;
 let isHost = false;
 let myNumber = null;
-let draggedCardIndex = null;
 
 // DOM Elements
 const screens = {
@@ -103,7 +102,7 @@ function updateLobby(state) {
 // Game Screen
 const yourNumberSpan = document.getElementById('your-number');
 const cardLine = document.getElementById('card-line');
-const dropZone = document.getElementById('drop-zone');
+const placementHint = document.getElementById('placement-hint');
 const notPlacedList = document.getElementById('not-placed-list');
 const revealBtn = document.getElementById('reveal-btn');
 const gameStatus = document.getElementById('game-status');
@@ -120,15 +119,76 @@ function updateGame(state) {
   gameState = state;
   yourNumberSpan.textContent = state.myNumber || '?';
 
-  // Update card line
+  // Update card line with slots
   cardLine.innerHTML = '';
   const placedIds = new Set(state.cardLine);
+  const myCardPlaced = placedIds.has(myId);
+  const showSlots = state.status === 'playing';
 
-  state.cardLine.forEach((playerId, index) => {
-    const player = state.players.find(p => p.id === playerId);
-    const card = createCard(player, index, state.status);
-    cardLine.appendChild(card);
-  });
+  // Add Low label
+  const lowLabel = document.createElement('span');
+  lowLabel.className = 'end-label';
+  lowLabel.textContent = 'Low';
+  cardLine.appendChild(lowLabel);
+
+  if (showSlots) {
+    // Create fieldset for accessibility
+    const fieldset = document.createElement('fieldset');
+    fieldset.className = 'slot-fieldset';
+
+    const legend = document.createElement('legend');
+    legend.className = 'visually-hidden';
+    legend.textContent = 'Choose position for your card';
+    fieldset.appendChild(legend);
+
+    // Find current position of player's card (if placed)
+    const myCurrentIndex = myCardPlaced ? state.cardLine.indexOf(myId) : -1;
+
+    // Render slots interleaved with cards
+    for (let i = 0; i <= state.cardLine.length; i++) {
+      // Skip slots adjacent to player's current position (they're redundant)
+      const isRedundantSlot = myCardPlaced && (i === myCurrentIndex || i === myCurrentIndex + 1);
+
+      if (!isRedundantSlot) {
+        const slot = createSlot(i, myCardPlaced);
+        fieldset.appendChild(slot);
+      }
+
+      // Add card after slot (if there is one)
+      if (i < state.cardLine.length) {
+        const playerId = state.cardLine[i];
+        const player = state.players.find(p => p.id === playerId);
+        const card = createCard(player, i, state.status);
+        fieldset.appendChild(card);
+      }
+    }
+
+    cardLine.appendChild(fieldset);
+  } else {
+    // No slots during reveal - just show cards
+    state.cardLine.forEach((playerId, index) => {
+      const player = state.players.find(p => p.id === playerId);
+      const card = createCard(player, index, state.status);
+      cardLine.appendChild(card);
+    });
+  }
+
+  // Add High label
+  const highLabel = document.createElement('span');
+  highLabel.className = 'end-label';
+  highLabel.textContent = 'High';
+  cardLine.appendChild(highLabel);
+
+  // Update placement hint
+  if (state.status === 'playing') {
+    if (!myCardPlaced) {
+      placementHint.textContent = 'Click a slot to place your card';
+    } else {
+      placementHint.textContent = 'Click a slot to move your card';
+    }
+  } else {
+    placementHint.textContent = '';
+  }
 
   // Update not placed list
   const notPlaced = state.players.filter(p => !placedIds.has(p.id));
@@ -142,20 +202,13 @@ function updateGame(state) {
     revealBtn.textContent = 'Reveal Cards';
     revealBtn.disabled = !allPlaced;
     revealBtn.style.display = 'block';
-    dropZone.style.display = 'flex';
   } else if (state.status === 'revealing') {
     revealBtn.textContent = 'Reveal Next';
     revealBtn.disabled = false;
     revealBtn.style.display = 'block';
-    dropZone.style.display = 'none';
   } else {
     revealBtn.style.display = 'none';
-    dropZone.style.display = 'none';
   }
-
-  // Check if my card is placed
-  const myCardPlaced = placedIds.has(myId);
-  dropZone.style.display = (state.status === 'playing' && !myCardPlaced) ? 'flex' : 'none';
 }
 
 function createCard(player, index, status) {
@@ -180,86 +233,56 @@ function createCard(player, index, status) {
   card.appendChild(numberSpan);
   card.appendChild(nameSpan);
 
-  // Drag and drop for playing state
-  if (status === 'playing') {
-    card.draggable = true;
-    card.addEventListener('dragstart', handleDragStart);
-    card.addEventListener('dragend', handleDragEnd);
-    card.addEventListener('dragover', handleDragOver);
-    card.addEventListener('drop', handleDrop);
-  }
-
   return card;
 }
 
-// Drag and Drop
-function handleDragStart(e) {
-  draggedCardIndex = parseInt(e.target.dataset.index);
-  e.target.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
+// Create a slot element for placing/moving cards
+function createSlot(position, myCardPlaced) {
+  const label = document.createElement('label');
+  label.className = 'slot';
+
+  const radio = document.createElement('input');
+  radio.type = 'radio';
+  radio.name = 'card-position';
+  radio.value = position;
+  radio.className = 'visually-hidden';
+
+  const indicator = document.createElement('div');
+  indicator.className = 'slot-indicator';
+
+  label.appendChild(radio);
+  label.appendChild(indicator);
+
+  // Handle click/selection
+  const handleSelect = () => {
+    handleSlotClick(position, myCardPlaced);
+  };
+
+  label.addEventListener('click', handleSelect);
+  radio.addEventListener('change', handleSelect);
+
+  return label;
 }
 
-function handleDragEnd(e) {
-  e.target.classList.remove('dragging');
-  draggedCardIndex = null;
-  document.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
-}
+// Handle slot selection
+function handleSlotClick(position, myCardPlaced) {
+  if (!gameState || gameState.status !== 'playing') return;
 
-function handleDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  const card = e.target.closest('.card');
-  if (card) {
-    document.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
-    card.classList.add('drag-over');
-  }
-}
-
-function handleDrop(e) {
-  e.preventDefault();
-  const targetCard = e.target.closest('.card');
-  if (targetCard && draggedCardIndex !== null) {
-    const toIndex = parseInt(targetCard.dataset.index);
-    if (draggedCardIndex !== toIndex) {
-      socket.emit('move-card', { fromIndex: draggedCardIndex, toIndex });
+  if (!myCardPlaced) {
+    // Place card at position
+    socket.emit('place-card', position);
+  } else {
+    // Move card to new position
+    const currentIndex = gameState.cardLine.indexOf(myId);
+    if (currentIndex !== -1 && currentIndex !== position) {
+      // Adjust position if moving to a later slot (accounting for removal)
+      const toIndex = position > currentIndex ? position - 1 : position;
+      if (currentIndex !== toIndex) {
+        socket.emit('move-card', { fromIndex: currentIndex, toIndex });
+      }
     }
   }
 }
-
-// Drop zone for placing new cards
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.classList.add('drag-over');
-});
-
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('drag-over');
-});
-
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZone.classList.remove('drag-over');
-});
-
-// Click to place your card
-dropZone.addEventListener('click', () => {
-  if (gameState && gameState.status === 'playing') {
-    const myCardPlaced = gameState.cardLine.includes(myId);
-    if (!myCardPlaced) {
-      socket.emit('place-card', gameState.cardLine.length);
-    }
-  }
-});
-
-// Also allow clicking on card line area to place
-cardLine.addEventListener('click', (e) => {
-  if (gameState && gameState.status === 'playing' && !e.target.closest('.card')) {
-    const myCardPlaced = gameState.cardLine.includes(myId);
-    if (!myCardPlaced) {
-      socket.emit('place-card', gameState.cardLine.length);
-    }
-  }
-});
 
 // Result Screen
 const resultTitle = document.getElementById('result-title');

@@ -264,6 +264,7 @@ input[type="text"]::placeholder {
 .card-line {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.75rem;
   min-height: 100px;
   padding: 1rem;
@@ -280,7 +281,7 @@ input[type="text"]::placeholder {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: grab;
+  cursor: default;
   transition: transform 0.2s, box-shadow 0.2s;
   border: 3px solid #0f3460;
 }
@@ -292,16 +293,6 @@ input[type="text"]::placeholder {
 
 .card.my-card {
   border-color: #e94560;
-}
-
-.card.dragging {
-  opacity: 0.5;
-  cursor: grabbing;
-}
-
-.card.drag-over {
-  transform: scale(1.05);
-  border-color: #ff6b6b;
 }
 
 .card.revealed {
@@ -344,24 +335,77 @@ input[type="text"]::placeholder {
   color: #666;
 }
 
-.drop-zone {
+/* Slot fieldset - remove default styling */
+.slot-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  align-items: center;
+}
+
+/* Visually hidden for screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Clickable slot between cards */
+.slot {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
-  border: 3px dashed #ccc;
-  border-radius: 8px;
-  color: #999;
-  margin-top: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  padding: 0.25rem;
 }
 
-.drop-zone:hover,
-.drop-zone.drag-over {
+.slot-indicator {
+  width: 24px;
+  height: 80px;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.slot:hover .slot-indicator {
   border-color: #e94560;
-  color: #e94560;
   background: rgba(233, 69, 96, 0.1);
+}
+
+.slot:has(input:focus) .slot-indicator {
+  border-color: #e94560;
+  background: rgba(233, 69, 96, 0.2);
+  outline: 2px solid #e94560;
+  outline-offset: 2px;
+}
+
+.end-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f3460;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0 0.5rem;
+}
+
+.placement-hint {
+  text-align: center;
+  color: #8892b0;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  min-height: 1.5rem;
 }
 
 .not-placed-section {
@@ -449,5 +493,10 @@ input[type="text"]::placeholder {
 
   .your-number span {
     font-size: 1.2rem;
+  }
+
+  .slot-indicator {
+    width: 20px;
+    height: 70px;
   }
 }
