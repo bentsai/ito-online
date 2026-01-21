@@ -1,0 +1,453 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+}
+
+.screen.active {
+  display: flex;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #e94560;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #e94560;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #0f3460;
+}
+
+.subtitle {
+  color: #8892b0;
+  margin-bottom: 2rem;
+}
+
+.hint {
+  font-weight: normal;
+  color: #8892b0;
+  font-size: 0.9rem;
+}
+
+/* Forms */
+.form-group {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #8892b0;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #0f3460;
+  border-radius: 8px;
+  background: #16213e;
+  color: #fff;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #e94560;
+}
+
+input[type="text"]::placeholder {
+  color: #4a5568;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  background: #e94560;
+  color: #fff;
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: #ff6b6b;
+  transform: translateY(-2px);
+}
+
+.btn.secondary {
+  background: #0f3460;
+  color: #fff;
+}
+
+.btn.secondary:hover:not(:disabled) {
+  background: #1a4a7a;
+}
+
+.btn.small {
+  padding: 0.4rem 1rem;
+  font-size: 0.875rem;
+}
+
+.button-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.divider {
+  text-align: center;
+  color: #8892b0;
+}
+
+.join-section {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.join-section input {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-align: center;
+}
+
+.error {
+  color: #ff6b6b;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Lobby */
+.game-code-display {
+  background: #0f3460;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.game-code-display .code {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  color: #e94560;
+}
+
+.players-section {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.players-section h3 {
+  border-bottom: 2px solid #e94560;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#players-list {
+  list-style: none;
+}
+
+#players-list li {
+  padding: 0.5rem 0;
+  color: #1a1a2e;
+  border-bottom: 1px solid #eee;
+}
+
+#players-list li:last-child {
+  border-bottom: none;
+}
+
+#players-list li.host::after {
+  content: '👑';
+  margin-left: 0.5rem;
+}
+
+#players-list li.you {
+  font-weight: bold;
+  color: #e94560;
+}
+
+#lobby-actions {
+  text-align: center;
+}
+
+#lobby-status {
+  color: #8892b0;
+  margin-top: 1rem;
+}
+
+/* Game Screen */
+.game-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.game-code-small {
+  color: #8892b0;
+  font-size: 0.875rem;
+}
+
+.your-number {
+  background: #e94560;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.your-number span {
+  font-size: 1.5rem;
+}
+
+.card-area {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  min-height: 200px;
+}
+
+.card-area h3 {
+  margin-bottom: 1rem;
+}
+
+.card-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  min-height: 100px;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.card {
+  width: 70px;
+  height: 100px;
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 3px solid #0f3460;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card.my-card {
+  border-color: #e94560;
+}
+
+.card.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.card.drag-over {
+  transform: scale(1.05);
+  border-color: #ff6b6b;
+}
+
+.card.revealed {
+  background: #fff;
+  border-color: #ccc;
+}
+
+.card.revealed .card-number {
+  color: #1a1a2e;
+  font-size: 1.5rem;
+}
+
+.card.correct {
+  border-color: #4caf50;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.card.wrong {
+  border-color: #f44336;
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+}
+
+.card-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.card-name {
+  font-size: 0.65rem;
+  color: #8892b0;
+  margin-top: 0.25rem;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card.revealed .card-name {
+  color: #666;
+}
+
+.drop-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  border: 3px dashed #ccc;
+  border-radius: 8px;
+  color: #999;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+  border-color: #e94560;
+  color: #e94560;
+  background: rgba(233, 69, 96, 0.1);
+}
+
+.not-placed-section {
+  width: 100%;
+  color: #8892b0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+#game-actions {
+  margin-bottom: 1rem;
+}
+
+.game-status {
+  color: #ff6b6b;
+  text-align: center;
+  min-height: 1.5rem;
+}
+
+/* Result Screen */
+#result-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+
+#result-title.win {
+  color: #4caf50;
+}
+
+#result-title.lose {
+  color: #f44336;
+}
+
+.final-order {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.result-card {
+  width: 80px;
+  height: 110px;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #4caf50;
+}
+
+.result-card.wrong {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
+.result-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a1a2e;
+}
+
+.result-name {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .game-code-display .code {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    width: 60px;
+    height: 85px;
+  }
+
+  .your-number span {
+    font-size: 1.2rem;
+  }
+}
