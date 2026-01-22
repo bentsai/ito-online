@@ -145,6 +145,10 @@ const placementHint = document.getElementById('placement-hint');
 const notPlacedList = document.getElementById('not-placed-list');
 const revealBtn = document.getElementById('reveal-btn');
 const gameStatus = document.getElementById('game-status');
+const categoryDisplay = document.getElementById('category-display');
+const categoryInputWrapper = document.getElementById('category-input-wrapper');
+const categoryInput = document.getElementById('category-input');
+const categorySetBtn = document.getElementById('category-set-btn');
 
 revealBtn.addEventListener('click', () => {
   if (gameState.status === 'playing') {
@@ -154,9 +158,40 @@ revealBtn.addEventListener('click', () => {
   }
 });
 
+// Category input handlers
+function submitCategory() {
+  const category = categoryInput.value.trim();
+  if (category) {
+    socket.emit('set-category', category);
+  }
+}
+
+categorySetBtn.addEventListener('click', submitCategory);
+categoryInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    submitCategory();
+  }
+});
+
 function updateGame(state) {
   gameState = state;
   yourNumberSpan.textContent = state.myNumber || '?';
+
+  // Update category display
+  const amHost = state.hostId === myId;
+  if (state.category) {
+    categoryDisplay.textContent = state.category;
+    categoryDisplay.classList.add('visible');
+    categoryInputWrapper.style.display = 'none';
+  } else {
+    categoryDisplay.classList.remove('visible');
+    // Show input for host only during playing phase
+    if (amHost && state.status === 'playing') {
+      categoryInputWrapper.style.display = 'flex';
+    } else {
+      categoryInputWrapper.style.display = 'none';
+    }
+  }
 
   // Update card line with slots
   cardLine.innerHTML = '';

@@ -172,6 +172,20 @@ io.on('connection', (socket) => {
     broadcastGameState(currentGame);
   });
 
+  // Set category
+  socket.on('set-category', (category) => {
+    if (!currentGame || !currentPlayerId) return;
+
+    const result = game.setCategory(currentGame, currentPlayerId, category);
+    if (result.error) {
+      socket.emit('error', result.error);
+      return;
+    }
+
+    io.to(currentGame).emit('category-updated', { category: result.game.category });
+    broadcastGameState(currentGame);
+  });
+
   // Start reveal phase - also reveals first card immediately
   socket.on('start-reveal', () => {
     if (!currentGame) return;

@@ -16,10 +16,23 @@ function createGame(hostId, hostName) {
     cardLine: [],
     revealIndex: 0,
     result: null,
+    category: null,
     lastActivity: Date.now()
   };
   games.set(code, game);
   return game;
+}
+
+function setCategory(code, playerId, category) {
+  const game = getGame(code);
+  if (!game) {
+    return { error: 'Game not found' };
+  }
+  if (game.hostId !== playerId) {
+    return { error: 'Only host can set category' };
+  }
+  game.category = category.trim().substring(0, 100);
+  return { game };
 }
 
 function getGame(code) {
@@ -244,7 +257,8 @@ function getGameState(code, playerId) {
     cardLine: game.cardLine,
     revealIndex: game.revealIndex,
     revealedCards,
-    result: game.result
+    result: game.result,
+    category: game.category
   };
 }
 
@@ -306,5 +320,6 @@ module.exports = {
   getGameState,
   getFinalResults,
   setPlayerSocket,
-  getPlayerSocket
+  getPlayerSocket,
+  setCategory
 };
