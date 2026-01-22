@@ -531,11 +531,13 @@ input[type="text"]::placeholder {
 
 .slot-indicator {
   width: 28px;
+  min-width: 28px;
   height: 120px;
   border: 2px dashed #ccc;
   border-radius: 8px;
   background: transparent;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .slot:hover .slot-indicator {
