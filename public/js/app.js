@@ -134,7 +134,6 @@ startGameBtn.addEventListener('click', () => {
 
 function updateLobby(state) {
   lobbyGameCode.textContent = state.code;
-  document.getElementById('game-code-display').textContent = state.code;
 
   playersList.innerHTML = '';
   state.players.forEach(p => {
