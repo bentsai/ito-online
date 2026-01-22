@@ -316,7 +316,7 @@ function updateGame(state) {
   const notPlaced = state.players.filter(p => !placedIds.has(p.id));
   notPlacedList.textContent = notPlaced.length > 0
     ? notPlaced.map(p => p.name).join(', ')
-    : 'No one';
+    : 'All cards placed. Ready to reveal!';
 
   // Update reveal button
   const allPlaced = state.cardLine.length === state.players.length;
