@@ -50,8 +50,8 @@ if (savedName) {
   joinNameInput.value = savedName;
 }
 
-// Check URL for game code (e.g., /ABCD or /XD45)
-const urlCode = window.location.pathname.slice(1).toUpperCase();
+// Check URL hash for game code (e.g., /#ABCD)
+const urlCode = window.location.hash.slice(1).toUpperCase();
 const hasUrlCode = /^[A-Z0-9]{4}$/.test(urlCode);
 if (hasUrlCode) {
   joinCodeInput.value = urlCode;
@@ -471,28 +471,28 @@ socket.on('connect', () => {
 
 socket.on('game-created', ({ code }) => {
   sessionStorage.setItem('gameCode', code);
-  history.replaceState(null, '', '/' + code);
+  window.location.hash = code;
   showScreen('lobby');
 });
 
 socket.on('game-joined', ({ code }) => {
   sessionStorage.setItem('gameCode', code);
-  history.replaceState(null, '', '/' + code);
+  window.location.hash = code;
   showScreen('lobby');
 });
 
 socket.on('rejoin-success', ({ code }) => {
   // Don't change screen - let game-state handler show the right screen
   sessionStorage.setItem('gameCode', code);
-  history.replaceState(null, '', '/' + code);
+  window.location.hash = code;
 });
 
 socket.on('rejoin-failed', () => {
   // Clear stale session data and stay on landing
   sessionStorage.removeItem('gameCode');
   sessionStorage.removeItem('playerName');
-  // Reset URL to root
-  history.replaceState(null, '', '/');
+  // Clear hash
+  history.replaceState(null, '', window.location.pathname);
 });
 
 socket.on('game-state', (state) => {
