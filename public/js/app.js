@@ -319,10 +319,16 @@ function createSlot(position, myCardPlaced) {
 
 // Handle slot selection
 function handleSlotClick(position, myCardPlaced) {
-  if (!gameState || gameState.status !== 'playing') return;
+  console.log('Slot clicked:', { position, myCardPlaced, gameState: gameState?.status, myId });
+
+  if (!gameState || gameState.status !== 'playing') {
+    console.log('Early return - gameState:', gameState?.status);
+    return;
+  }
 
   if (!myCardPlaced) {
     // Place card at position
+    console.log('Emitting place-card:', position);
     socket.emit('place-card', position);
   } else {
     // Move card to new position

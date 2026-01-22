@@ -135,9 +135,15 @@ io.on('connection', (socket) => {
 
   // Place a card
   socket.on('place-card', (position) => {
-    if (!currentGame || !currentPlayerId) return;
+    console.log('place-card received:', { position, currentGame, currentPlayerId });
+
+    if (!currentGame || !currentPlayerId) {
+      console.log('place-card early return - missing:', { currentGame, currentPlayerId });
+      return;
+    }
 
     const result = game.placeCard(currentGame, currentPlayerId, position);
+    console.log('place-card result:', result.error || 'success');
     if (result.error) {
       socket.emit('error', result.error);
       return;
