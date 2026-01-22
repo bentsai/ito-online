@@ -609,21 +609,25 @@ input[type="text"]::placeholder {
   padding: 1rem;
 }
 
-/* Leave Game Button - subtle text link style */
+/* Leave Game - plain text link */
 .leave-game-btn {
   margin-top: 2rem;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   align-self: center;
-  background: transparent;
-  color: #999;
-  padding: 0.5rem 1rem;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  background: none;
+  color: #bbb;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  font-weight: 400;
+  box-shadow: none;
 }
 
 .leave-game-btn:hover {
-  color: #636e72;
-  background: transparent;
+  color: #888;
+  background: none;
+  transform: none;
+  text-decoration: underline;
 }
 
 /* Center lobby actions */
