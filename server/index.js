@@ -163,7 +163,7 @@ io.on('connection', (socket) => {
     broadcastGameState(currentGame);
   });
 
-  // Start reveal phase
+  // Start reveal phase - also reveals first card immediately
   socket.on('start-reveal', () => {
     if (!currentGame) return;
 
@@ -174,6 +174,20 @@ io.on('connection', (socket) => {
     }
 
     io.to(currentGame).emit('reveal-started');
+
+    // Immediately reveal the first card
+    const revealResult = game.revealNext(currentGame);
+    if (!revealResult.error) {
+      io.to(currentGame).emit('card-revealed', revealResult.revealData);
+
+      if (revealResult.game.status === 'ended') {
+        io.to(currentGame).emit('round-ended', {
+          result: revealResult.game.result,
+          finalOrder: game.getFinalResults(currentGame)
+        });
+      }
+    }
+
     broadcastGameState(currentGame);
   });
 
