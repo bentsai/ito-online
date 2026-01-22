@@ -22,14 +22,40 @@ function showScreen(screenName) {
 }
 
 // Landing Screen
-const playerNameInput = document.getElementById('player-name');
+const tabCreate = document.getElementById('tab-create');
+const tabJoin = document.getElementById('tab-join');
+const panelCreate = document.getElementById('panel-create');
+const panelJoin = document.getElementById('panel-join');
+const createNameInput = document.getElementById('create-name');
+const joinNameInput = document.getElementById('join-name');
+const joinCodeInput = document.getElementById('join-code');
 const createGameBtn = document.getElementById('create-game-btn');
 const joinGameBtn = document.getElementById('join-game-btn');
-const gameCodeInput = document.getElementById('game-code-input');
 const landingError = document.getElementById('landing-error');
 
+// Tab switching
+function switchTab(tab) {
+  landingError.textContent = '';
+  if (tab === 'create') {
+    tabCreate.classList.add('active');
+    tabJoin.classList.remove('active');
+    panelCreate.classList.add('active');
+    panelJoin.classList.remove('active');
+    createNameInput.focus();
+  } else {
+    tabJoin.classList.add('active');
+    tabCreate.classList.remove('active');
+    panelJoin.classList.add('active');
+    panelCreate.classList.remove('active');
+    joinCodeInput.focus();
+  }
+}
+
+tabCreate.addEventListener('click', () => switchTab('create'));
+tabJoin.addEventListener('click', () => switchTab('join'));
+
 createGameBtn.addEventListener('click', () => {
-  const name = playerNameInput.value.trim();
+  const name = createNameInput.value.trim();
   if (!name) {
     landingError.textContent = 'Please enter your name';
     return;
@@ -38,14 +64,14 @@ createGameBtn.addEventListener('click', () => {
 });
 
 joinGameBtn.addEventListener('click', () => {
-  const name = playerNameInput.value.trim();
-  const code = gameCodeInput.value.trim().toUpperCase();
-  if (!name) {
-    landingError.textContent = 'Please enter your name';
-    return;
-  }
+  const code = joinCodeInput.value.trim().toUpperCase();
+  const name = joinNameInput.value.trim();
   if (!code || code.length !== 4) {
     landingError.textContent = 'Please enter a valid 4-character game code';
+    return;
+  }
+  if (!name) {
+    landingError.textContent = 'Please enter your name';
     return;
   }
   socket.emit('join-game', { code, name });
