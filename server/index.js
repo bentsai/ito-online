@@ -85,13 +85,16 @@ io.on('connection', (socket) => {
     game.setPlayerSocket(currentGame, playerId, socket.id);
     socket.join(currentGame);
 
-    // Send current state to rejoined player
-    socket.emit('game-joined', { code: currentGame });
+    // Send current state to rejoined player (use rejoin-success instead of game-joined to avoid lobby flash)
+    socket.emit('rejoin-success', { code: currentGame });
     socket.emit('game-state', game.getGameState(currentGame, playerId));
 
-    // If they had a number, send it
-    if (player.number !== null) {
-      socket.emit('round-started', { yourNumber: player.number });
+    // If game ended, send the final results
+    if (gameData.status === 'ended') {
+      socket.emit('round-ended', {
+        result: gameData.result,
+        finalOrder: game.getFinalResults(currentGame)
+      });
     }
 
     console.log(`Player ${name} (${playerId}) rejoined game ${currentGame}`);

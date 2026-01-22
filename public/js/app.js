@@ -405,8 +405,13 @@ socket.on('game-joined', ({ code }) => {
   showScreen('lobby');
 });
 
+socket.on('rejoin-success', ({ code }) => {
+  // Don't change screen - let game-state handler show the right screen
+  sessionStorage.setItem('gameCode', code);
+});
+
 socket.on('rejoin-failed', () => {
-  // Clear stale session data
+  // Clear stale session data and stay on landing
   sessionStorage.removeItem('gameCode');
   sessionStorage.removeItem('playerName');
 });
@@ -417,14 +422,19 @@ socket.on('game-state', (state) => {
 
   if (state.status === 'lobby') {
     updateLobby(state);
-    if (screens.landing.classList.contains('active')) {
+    // Show lobby if coming from landing (not already in lobby)
+    if (!screens.lobby.classList.contains('active')) {
       showScreen('lobby');
     }
   } else if (state.status === 'playing' || state.status === 'revealing') {
     updateGame(state);
-    if (!screens.game.classList.contains('active') && !screens.result.classList.contains('active')) {
+    // Show game screen if not already there
+    if (!screens.game.classList.contains('active')) {
       showScreen('game');
     }
+  } else if (state.status === 'ended') {
+    // Game ended - result screen will be shown by round-ended event
+    updateGame(state);
   }
 });
 
