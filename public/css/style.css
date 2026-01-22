@@ -390,18 +390,21 @@ input[type="text"]::placeholder {
 
 .card-line {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.75rem;
   min-height: 100px;
   padding: 1rem;
   background: #f8f9fa;
   border-radius: 8px;
+  overflow-x: auto;
 }
 
 .card {
   width: 100px;
   height: 140px;
+  min-width: 100px;
+  flex-shrink: 0;
   background: #7EC8E3;
   border-radius: 12px;
   display: flex;
@@ -499,7 +502,7 @@ input[type="text"]::placeholder {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0;
   align-items: center;
 }
