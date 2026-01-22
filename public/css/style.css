@@ -318,66 +318,84 @@ input[type="text"]::placeholder {
 }
 
 .card {
-  width: 70px;
-  height: 100px;
+  width: 100px;
+  height: 140px;
   background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: default;
   transition: transform 0.2s, box-shadow 0.2s;
-  border: 3px solid #0f3460;
+  border: 4px solid #0f3460;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
+/* Player colors */
+.card.player-0 { background: linear-gradient(135deg, #e94560 0%, #c73e54 100%); border-color: #e94560; }
+.card.player-1 { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-color: #3498db; }
+.card.player-2 { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); border-color: #2ecc71; }
+.card.player-3 { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); border-color: #9b59b6; }
+.card.player-4 { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); border-color: #f39c12; }
+.card.player-5 { background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%); border-color: #1abc9c; }
+.card.player-6 { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-color: #e74c3c; }
+.card.player-7 { background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%); border-color: #34495e; }
+.card.player-8 { background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%); border-color: #fd79a8; }
+.card.player-9 { background: linear-gradient(135deg, #00cec9 0%, #0984e3 100%); border-color: #00cec9; }
+
 .card.my-card {
-  border-color: #e94560;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px currentColor, 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card.revealed {
-  background: #fff;
-  border-color: #ccc;
+  background: #fff !important;
+  border-color: #ccc !important;
 }
 
 .card.revealed .card-number {
   color: #1a1a2e;
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 .card.correct {
-  border-color: #4caf50;
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-color: #4caf50 !important;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
 }
 
 .card.wrong {
-  border-color: #f44336;
-  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  border-color: #f44336 !important;
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%) !important;
 }
 
 .card-number {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #fff;
 }
 
 .card-name {
-  font-size: 0.65rem;
-  color: #8892b0;
-  margin-top: 0.25rem;
-  max-width: 60px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  max-width: 90px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .card.revealed .card-name {
-  color: #666;
+  color: #333;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* Slot fieldset - remove default styling */
@@ -414,10 +432,10 @@ input[type="text"]::placeholder {
 }
 
 .slot-indicator {
-  width: 24px;
-  height: 80px;
+  width: 28px;
+  height: 120px;
   border: 2px dashed #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   background: transparent;
   transition: all 0.2s ease;
 }
@@ -532,8 +550,21 @@ input[type="text"]::placeholder {
   }
 
   .card {
-    width: 60px;
-    height: 85px;
+    width: 80px;
+    height: 110px;
+  }
+
+  .card-name {
+    font-size: 0.7rem;
+    max-width: 70px;
+  }
+
+  .card-number {
+    font-size: 1.5rem;
+  }
+
+  .card.revealed .card-number {
+    font-size: 1.5rem;
   }
 
   .your-number {
@@ -546,6 +577,6 @@ input[type="text"]::placeholder {
 
   .slot-indicator {
     width: 20px;
-    height: 70px;
+    height: 90px;
   }
 }

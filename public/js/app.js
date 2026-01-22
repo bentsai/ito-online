@@ -197,7 +197,8 @@ function updateGame(state) {
       if (i < state.cardLine.length) {
         const playerId = state.cardLine[i];
         const player = state.players.find(p => p.id === playerId);
-        const card = createCard(player, i, state.status, state.revealedCards);
+        const playerIndex = state.players.findIndex(p => p.id === playerId);
+        const card = createCard(player, i, state.status, state.revealedCards, playerIndex);
         fieldset.appendChild(card);
       }
     }
@@ -207,7 +208,8 @@ function updateGame(state) {
     // No slots during reveal - just show cards
     state.cardLine.forEach((playerId, index) => {
       const player = state.players.find(p => p.id === playerId);
-      const card = createCard(player, index, state.status, state.revealedCards);
+      const playerIndex = state.players.findIndex(p => p.id === playerId);
+      const card = createCard(player, index, state.status, state.revealedCards, playerIndex);
       cardLine.appendChild(card);
     });
   }
@@ -250,11 +252,16 @@ function updateGame(state) {
   }
 }
 
-function createCard(player, index, status, revealedCards) {
+function createCard(player, index, status, revealedCards, playerIndex) {
   const card = document.createElement('div');
   card.className = 'card';
   card.dataset.index = index;
   card.dataset.playerId = player.id;
+
+  // Add player color class
+  if (playerIndex !== undefined) {
+    card.classList.add(`player-${playerIndex % 10}`);
+  }
 
   if (player.id === myId) {
     card.classList.add('my-card');
