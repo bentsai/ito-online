@@ -2,11 +2,12 @@
 const socket = io();
 
 // Generate or retrieve persistent player ID
+// Uses localStorage so ID persists across browser sessions (window close/reopen)
 function getPlayerId() {
-  let id = sessionStorage.getItem('playerId');
+  let id = localStorage.getItem('playerId');
   if (!id) {
     id = 'p_' + Math.random().toString(36).substr(2, 9);
-    sessionStorage.setItem('playerId', id);
+    localStorage.setItem('playerId', id);
   }
   return id;
 }
