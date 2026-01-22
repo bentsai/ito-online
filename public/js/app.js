@@ -50,6 +50,21 @@ if (savedName) {
   joinNameInput.value = savedName;
 }
 
+// Check URL for game code (e.g., /ABCD)
+const urlCode = window.location.pathname.slice(1).toUpperCase();
+const hasUrlCode = /^[A-Z]{4}$/.test(urlCode);
+if (hasUrlCode) {
+  joinCodeInput.value = urlCode;
+  // Switch to join tab after DOM is ready
+  setTimeout(() => {
+    tabJoin.classList.add('active');
+    tabCreate.classList.remove('active');
+    panelJoin.classList.add('active');
+    panelCreate.classList.remove('active');
+    joinNameInput.focus();
+  }, 0);
+}
+
 // Tab switching
 function switchTab(tab) {
   landingError.textContent = '';
@@ -456,23 +471,28 @@ socket.on('connect', () => {
 
 socket.on('game-created', ({ code }) => {
   sessionStorage.setItem('gameCode', code);
+  history.replaceState(null, '', '/' + code);
   showScreen('lobby');
 });
 
 socket.on('game-joined', ({ code }) => {
   sessionStorage.setItem('gameCode', code);
+  history.replaceState(null, '', '/' + code);
   showScreen('lobby');
 });
 
 socket.on('rejoin-success', ({ code }) => {
   // Don't change screen - let game-state handler show the right screen
   sessionStorage.setItem('gameCode', code);
+  history.replaceState(null, '', '/' + code);
 });
 
 socket.on('rejoin-failed', () => {
   // Clear stale session data and stay on landing
   sessionStorage.removeItem('gameCode');
   sessionStorage.removeItem('playerName');
+  // Reset URL to root
+  history.replaceState(null, '', '/');
 });
 
 socket.on('game-state', (state) => {
