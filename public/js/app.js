@@ -43,6 +43,13 @@ const createGameBtn = document.getElementById('create-game-btn');
 const joinGameBtn = document.getElementById('join-game-btn');
 const landingError = document.getElementById('landing-error');
 
+// Load saved player name from localStorage
+const savedName = localStorage.getItem('playerName');
+if (savedName) {
+  createNameInput.value = savedName;
+  joinNameInput.value = savedName;
+}
+
 // Tab switching
 function switchTab(tab) {
   landingError.textContent = '';
@@ -70,6 +77,7 @@ createGameBtn.addEventListener('click', () => {
     landingError.textContent = 'Please enter your name';
     return;
   }
+  localStorage.setItem('playerName', name);
   sessionStorage.setItem('playerName', name);
   socket.emit('create-game', { playerId: myId, name });
 });
@@ -85,6 +93,7 @@ joinGameBtn.addEventListener('click', () => {
     landingError.textContent = 'Please enter your name';
     return;
   }
+  localStorage.setItem('playerName', name);
   sessionStorage.setItem('playerName', name);
   sessionStorage.setItem('gameCode', code);
   socket.emit('join-game', { code, name, playerId: myId });
