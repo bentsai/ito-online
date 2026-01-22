@@ -50,9 +50,9 @@ if (savedName) {
   joinNameInput.value = savedName;
 }
 
-// Check URL for game code (e.g., /ABCD)
+// Check URL for game code (e.g., /ABCD or /XD45)
 const urlCode = window.location.pathname.slice(1).toUpperCase();
-const hasUrlCode = /^[A-Z]{4}$/.test(urlCode);
+const hasUrlCode = /^[A-Z0-9]{4}$/.test(urlCode);
 if (hasUrlCode) {
   joinCodeInput.value = urlCode;
   // Switch to join tab after DOM is ready

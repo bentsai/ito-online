@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Route for game codes - serve index.html and let client handle it
-app.get('/:code([A-Za-z]{4})', (req, res) => {
+app.get('/:code([A-Za-z0-9]{4})', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
