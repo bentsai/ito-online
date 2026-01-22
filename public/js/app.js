@@ -176,6 +176,11 @@ const categoryInputWrapper = document.getElementById('category-input-wrapper');
 const categoryInput = document.getElementById('category-input');
 const categorySetBtn = document.getElementById('category-set-btn');
 
+console.log('Category elements found:', {
+  categoryInput: !!categoryInput,
+  categorySetBtn: !!categorySetBtn
+});
+
 revealBtn.addEventListener('click', () => {
   if (gameState.status === 'playing') {
     socket.emit('start-reveal');
@@ -196,6 +201,7 @@ function submitCategory() {
   }
 }
 
+console.log('Attaching click listener to categorySetBtn');
 categorySetBtn.addEventListener('click', submitCategory);
 categoryInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
