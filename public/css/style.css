@@ -26,7 +26,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  max-width: 600px;
+  max-width: 800px;
   width: 100%;
 }
 
@@ -603,6 +603,16 @@ input[type="text"]::placeholder {
 
 #result-title.lose {
   color: #F56476;
+}
+
+.result-category {
+  font-size: 1.25rem;
+  color: #636e72;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #F7C600;
+  border-radius: 8px;
+  background: #fff;
 }
 
 .final-order {

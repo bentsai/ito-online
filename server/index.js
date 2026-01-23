@@ -160,9 +160,11 @@ io.on('connection', (socket) => {
 
   // Move a card
   socket.on('move-card', ({ fromIndex, toIndex }) => {
+    console.log('move-card received:', { fromIndex, toIndex, currentGame });
     if (!currentGame) return;
 
     const result = game.moveCard(currentGame, fromIndex, toIndex);
+    console.log('moveCard result:', result.error || 'success');
     if (result.error) {
       socket.emit('error', result.error);
       return;

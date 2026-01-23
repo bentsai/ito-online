@@ -182,6 +182,8 @@ console.log('Category elements found:', {
 });
 
 revealBtn.addEventListener('click', () => {
+  // Only host can reveal
+  if (!isHost) return;
   if (gameState.status === 'playing') {
     socket.emit('start-reveal');
   } else if (gameState.status === 'revealing') {
@@ -318,13 +320,13 @@ function updateGame(state) {
     ? notPlaced.map(p => p.name).join(', ')
     : 'All cards placed. Ready to reveal!';
 
-  // Update reveal button
+  // Update reveal button - only host can reveal
   const allPlaced = state.cardLine.length === state.players.length;
-  if (state.status === 'playing') {
+  if (state.status === 'playing' && amHost) {
     revealBtn.textContent = 'Reveal Cards';
     revealBtn.disabled = !allPlaced;
     revealBtn.style.display = 'block';
-  } else if (state.status === 'revealing') {
+  } else if (state.status === 'revealing' && amHost) {
     revealBtn.textContent = 'Reveal Next';
     revealBtn.disabled = false;
     revealBtn.style.display = 'block';
@@ -458,6 +460,15 @@ document.querySelectorAll('.leave-game-btn').forEach(btn => {
 function showResult(result, order) {
   resultTitle.textContent = result === 'win' ? 'You Win!' : 'You Lose!';
   resultTitle.className = result;
+
+  // Show category if one was set
+  const resultCategory = document.getElementById('result-category');
+  if (gameState && gameState.category) {
+    resultCategory.textContent = gameState.category;
+    resultCategory.style.display = 'block';
+  } else {
+    resultCategory.style.display = 'none';
+  }
 
   finalOrder.innerHTML = '';
   order.forEach((item) => {
