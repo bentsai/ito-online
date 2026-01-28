@@ -380,6 +380,9 @@ function createCard(player, index, status, revealedCards, playerIndex) {
   return card;
 }
 
+// Debounce to prevent double-firing from click + change events
+let lastSlotClickTime = 0;
+
 // Create a slot element for placing/moving cards
 function createSlot(position, myCardPlaced) {
   const label = document.createElement('label');
@@ -397,8 +400,12 @@ function createSlot(position, myCardPlaced) {
   label.appendChild(radio);
   label.appendChild(indicator);
 
-  // Handle click/selection
+  // Handle click/selection with debounce
+  // (clicking a label triggers both click and change on the radio)
   const handleSelect = () => {
+    const now = Date.now();
+    if (now - lastSlotClickTime < 100) return; // Debounce duplicate events
+    lastSlotClickTime = now;
     handleSlotClick(position, myCardPlaced);
   };
 
