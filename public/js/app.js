@@ -182,9 +182,17 @@ console.log('Category elements found:', {
   categorySetBtn: !!categorySetBtn
 });
 
+// Debounce reveal button to prevent multiple rapid clicks
+let lastRevealClickTime = 0;
 revealBtn.addEventListener('click', () => {
   // Only host can reveal
   if (!isHost) return;
+
+  // Debounce to prevent rapid multiple clicks
+  const now = Date.now();
+  if (now - lastRevealClickTime < 500) return;
+  lastRevealClickTime = now;
+
   if (gameState.status === 'playing') {
     socket.emit('start-reveal');
   } else if (gameState.status === 'revealing') {
