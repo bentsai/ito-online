@@ -109,6 +109,7 @@ function startRound(code, playerId) {
   game.revealIndex = 0;
   game.result = null;
   game.category = null;
+  game.hasError = false;
 
   return { game };
 }
@@ -208,13 +209,15 @@ function revealNext(code) {
 
   game.revealIndex++;
 
-  // Check for game end
+  // Track if any card was out of order
   if (!isCorrect) {
+    game.hasError = true;
+  }
+
+  // Only end game when all cards have been revealed
+  if (game.revealIndex >= game.cardLine.length) {
     game.status = 'ended';
-    game.result = 'lose';
-  } else if (game.revealIndex >= game.cardLine.length) {
-    game.status = 'ended';
-    game.result = 'win';
+    game.result = game.hasError ? 'lose' : 'win';
   }
 
   return { game, revealData };
